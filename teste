@@ -1,0 +1,323 @@
+import os
+import re
+import pandas as pd
+import psycopg2
+from psycopg2 import sql
+from flask import Flask, render_template, request, jsonify
+from werkzeug.utils import secure_filename
+from dotenv import load_dotenv
+
+# Carrega as variáveis de ambiente do arquivo .env
+load_dotenv()
+
+# ==============================================================================
+# CONFIGURAÇÕES GERAIS
+# ==============================================================================
+app = Flask(__name__)
+app.secret_key = os.getenv("FLASK_SECRET_KEY", "uma-chave-secreta-super-forte")
+
+UPLOAD_FOLDER = os.getenv("UPLOAD_FOLDER", "uploads")
+ALLOWED_EXTS = set(os.getenv("ALLOWED_EXTENSIONS", "xlsx,xls").split(","))
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
+DB_CONFIG = {
+    'dbname': os.getenv('DB_NAME'),
+    'user': os.getenv('DB_USER'),
+    'password': os.getenv('DB_PASSWORD'),
+    'host': os.getenv('DB_HOST'),
+    'port': os.getenv('DB_PORT'),
+}
+
+PATTERN_VALOR = re.compile(r'^\d{1,3}(?:\.\d{3})*,\d{2}$|^\d+,\d{2}$')
+PATTERN_CPF = re.compile(r'\d{3}\.?\d{3}\.?\d{3}-?\d{2}')
+TIPOS_PAGAMENTO = {
+    "SALARIO": "1", "ADIANTAMENTO": "2", "FERIAS": "3",
+    "ADTO13": "4", "RESCISAO": "5", "PENSAO": "6", "PRO_LABORE_E_ESTAGIO": "7", "PGM13": "8"
+}
+
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+
+# ==============================================================================
+# FUNÇÕES DE PROCESSAMENTO E BANCO DE DADOS
+# ==============================================================================
+def filtrar_linhas_validas(df, tipo_pagamento):
+    dados_filtrados = []
+    # Para PENSÃO, usamos regra específica: linhas com CPF
+    if tipo_pagamento == "6":
+        for row in df.itertuples(index=False):
+            linha = [str(c).strip() if not pd.isna(c) else "" for c in row]
+            # Ignora cabeçalhos e rodapés
+            if any(re.search(r'total|depósito|folha|pág|bruto|liquido', c.lower()) for c in linha if c):
+                continue
+            # Mantém apenas linhas que contenham CPF válido
+            if any(PATTERN_CPF.match(c) for c in linha):
+                dados_filtrados.append(linha)
+        return dados_filtrados
+    if tipo_pagamento == "7":
+        dados_filtrados = []
+        iniciou = False
+        for row in df.itertuples(index=False):
+            linha = [str(c).strip() if not pd.isna(c) else "" for c in row]
+
+            # Identifica início da tabela (mais tolerante)
+            if not iniciou:
+                if any("ordem" in c.lower() for c in linha) and any("contrato" in c.lower() for c in linha):
+                    iniciou = True
+                continue
+
+            # Ignora linhas totalmente vazias
+            if all(c == "" for c in linha):
+                continue
+
+            # Interrompe apenas quando achar "Total" ou "Depósito" (rodapé)
+            if any(re.search(r'total|dep[oó]sito', c.lower()) for c in linha if c):
+                break
+
+            dados_filtrados.append(linha)
+        return dados_filtrados
+    # Para os demais tipos, mantemos a lógica de blocos de tabelas
+    dentro_tabela = False
+    encontrou_cabecalho = False
+    padrao_pagina = re.compile(r'Interlink Transportes|Folha Mensal|Relação de Líquidos', re.IGNORECASE)
+
+    for row in df.itertuples(index=False):
+        linha = [str(c).strip() if not pd.isna(c) else "" for c in row]
+        if any(padrao_pagina.search(c) for c in linha if c):
+            dentro_tabela = True
+            encontrou_cabecalho = False
+            continue
+        if not dentro_tabela:
+            continue
+        if not encontrou_cabecalho and "Ordem" in linha and "Unidade/Contrato" in linha:
+            encontrou_cabecalho = True
+            continue
+        if not encontrou_cabecalho:
+            continue
+        if any(re.search(r'total|depósito|folha|pág|bruto|liquido', c.lower()) for c in linha if c):
+            dentro_tabela = False
+            continue
+        if all(c == "" for c in linha):
+            continue
+        dados_filtrados.append(linha)
+    return dados_filtrados
+
+def determinar_tipo_pagamento(nome_arquivo):
+    nome = os.path.basename(nome_arquivo).upper()
+    for chave, valor in TIPOS_PAGAMENTO.items():
+        if chave in nome:
+            return valor
+    return None
+
+def extrair_valor_monetario(celulas):
+    for cell in reversed(celulas):
+        if isinstance(cell, str) and PATTERN_VALOR.match(cell.replace(' ', '')):
+            return cell
+    return ""
+
+def formatar_valor_monetario(valor):
+    if not valor:
+        return ""
+    valor_limpo = re.sub(r'[^\d,]', '', str(valor))
+    if not valor_limpo:
+        return ""
+    if ',' not in valor_limpo:
+        valor_limpo += '00'
+    partes = valor_limpo.split(',')
+    inteiro = partes[0]
+    decimal = partes[1].ljust(2, '0')[:2]
+    inteiro_formatado = f"{int(inteiro):,}".replace(",", "X").replace(".", ",").replace("X", ".")
+    return f"{inteiro_formatado},{decimal}"
+
+def processar_deposito_conta(linha):
+    try:
+        ordem = linha[1].strip(); unidade = linha[2].strip(); contrato = linha[4].strip(); nome = linha[5].strip()
+        cpf = next((str(c).strip() for c in linha if PATTERN_CPF.match(str(c).replace(' ', ''))), "")
+        banco, agencia, num_conta = "", "", ""
+        for i, cell in enumerate(linha):
+            if isinstance(cell, str) and '/' in cell:
+                partes = cell.split('/')
+                if len(partes) >= 2 and partes[0].strip().isdigit():
+                    banco = partes[0].strip(); agencia = partes[1].strip()
+                    if i + 1 < len(linha) and linha[i+1] and str(linha[i+1]).strip() not in ['-', '/']:
+                        num_conta = str(linha[i+1]).strip()
+                    break
+        deposito = extrair_valor_monetario(linha)
+        return [ordem, unidade, contrato, nome, cpf, banco, agencia, num_conta, deposito]
+    except Exception:
+        return None
+
+def processar_pensao(linha):
+    try:
+        # 1) Nome do funcionário
+        nome = linha[4].strip()
+
+        # 2) Unidade e contrato
+        unicon = linha[7].strip()
+        if "/" in unicon:
+            unidade, contrato = [p.strip() for p in unicon.split("/", 1)]
+        else:
+            unidade, contrato = unicon, ""
+
+        # 3) CPF
+        cpf = linha[8].strip()
+
+        # 4) Banco / Agência
+        banco = str(linha[10]).strip()
+        agencia = str(linha[12]).strip()
+
+        # 5) Número da conta
+        num_conta = str(linha[14]).strip()
+
+        # 6) Valor
+        valor = extrair_valor_monetario(linha)
+
+        # Retorna na mesma ordem das demais funções
+        # [ordem, unidade, contrato, nome, cpf, banco, agencia, num_conta, deposito]
+        return ["", unidade, contrato, nome, cpf, banco, agencia, num_conta, valor]
+
+    except Exception as e:
+        print(f"Erro ao processar linha de pensão: {e}")
+        return None
+
+
+
+def processar_especie(linha):
+    try:
+        ordem = linha[1].strip(); contrato = linha[2].strip(); nome = linha[3].strip()
+        cpf = next((str(c).strip() for c in linha[7:10] if PATTERN_CPF.match(str(c).replace(' ', ''))), "")
+        deposito = extrair_valor_monetario(linha)
+        return [ordem, "", contrato, nome, cpf, "", "", "", deposito]
+    except Exception:
+        return None
+
+def processar_arquivo(caminho_entrada, tipo_pagamento):
+    try:
+        df = pd.read_excel(caminho_entrada, header=None, engine='openpyxl')
+    except Exception:
+        df = pd.read_excel(caminho_entrada, header=None)
+
+    linhas_validas = filtrar_linhas_validas(df, tipo_pagamento)
+
+    dados = []
+    for linha in linhas_validas:
+        resultado = None
+        if tipo_pagamento == "6":
+            resultado = processar_pensao(linha)
+        elif tipo_pagamento == "7":
+            resultado = processar_especie(linha)
+        else:
+            resultado = processar_deposito_conta(linha)
+
+        if resultado:
+            dados.append(resultado)
+
+    if not dados:
+        return None
+
+    colunas = ['ordem', 'unidade', 'contrato', 'nome', 'cpf', 'banco', 'agencia', 'num_conta', 'deposito']
+    return pd.DataFrame(dados, columns=colunas)
+
+def criar_tabela_postgres(conn):
+    with conn.cursor() as cursor:
+        cursor.execute("""
+        CREATE TABLE IF NOT EXISTS public_folha_pagamento (
+            id SERIAL PRIMARY KEY,
+            ordem VARCHAR, unidade VARCHAR, contrato VARCHAR,
+            nome VARCHAR, cpf VARCHAR, banco VARCHAR, agencia VARCHAR,
+            num_conta VARCHAR, deposito VARCHAR, tipo_pagamento VARCHAR,
+            data_insercao TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        );
+        """)
+        conn.commit()
+
+def sincronizar_sequence(conn):
+    with conn.cursor() as cursor:
+        cursor.execute("""
+            SELECT COALESCE(MAX(id), 0) FROM public_folha_pagamento;
+        """)
+        max_id = cursor.fetchone()[0]
+        valor_sequence = max_id if max_id > 0 else 1
+        cursor.execute(sql.SQL("""
+            SELECT setval(
+                pg_get_serial_sequence('public_folha_pagamento', 'id'),
+                %s,
+                true
+            );
+        """), [valor_sequence])
+        conn.commit()
+
+def inserir_dados_postgres(conn, df, tipo_pagamento):
+    criar_tabela_postgres(conn)
+    sincronizar_sequence(conn)
+    
+    insert_query = sql.SQL("""
+        INSERT INTO public_folha_pagamento (
+            ordem, unidade, contrato, nome, cpf, banco, agencia, num_conta, deposito, tipo_pagamento
+        ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+    """)
+    
+    with conn.cursor() as cursor:
+        for _, row in df.iterrows():
+            data_tuple = tuple(row) + (tipo_pagamento,)
+            cursor.execute(insert_query, data_tuple)
+        conn.commit()
+
+# ==============================================================================
+# ROTAS FLASK
+# ==============================================================================
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTS
+
+@app.route('/')
+def index():
+    return render_template('index.html')
+
+@app.route('/upload', methods=['POST'])
+def upload_e_processar_arquivo():
+    if 'file' not in request.files or request.files['file'].filename == '':
+        return jsonify({'status': 'error', 'message': 'Nenhum arquivo selecionado.'}), 400
+
+    f = request.files['file']
+    filename = secure_filename(f.filename)
+
+    if not allowed_file(filename):
+        return jsonify({'status': 'error', 'message': 'Extensão de arquivo não permitida.'}), 400
+    
+    path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+    
+    try:
+        f.save(path)
+        
+        tipo_pagamento = determinar_tipo_pagamento(filename)
+        if not tipo_pagamento:
+            return jsonify({'status': 'error', 'message': f'Não foi possível determinar o tipo de pagamento para "{filename}".'}), 400
+
+        df = processar_arquivo(path, tipo_pagamento)
+        if df is None or df.empty:
+            return jsonify({'status': 'warning', 'message': f'Nenhum dado válido encontrado no arquivo "{filename}".'}), 200
+
+        df['deposito'] = df['deposito'].apply(formatar_valor_monetario)
+
+        conn = None
+        try:
+            conn = psycopg2.connect(**DB_CONFIG)
+            inserir_dados_postgres(conn, df, tipo_pagamento)
+            return jsonify({
+                'status': 'success', 
+                'message': f'Arquivo "{filename}" processado com sucesso! {len(df)} registros foram inseridos no banco.'
+            }), 200
+        except psycopg2.Error as db_error:
+            return jsonify({'status': 'error', 'message': f'Erro de banco de dados: {db_error}'}), 500
+        finally:
+            if conn:
+                conn.close()
+
+    except Exception as e:
+        return jsonify({'status': 'error', 'message': f'Um erro inesperado ocorreu: {e}'}), 500
+    finally:
+        if os.path.exists(path):
+            os.remove(path)
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=8080, debug=True)

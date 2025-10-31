@@ -1,0 +1,12 @@
+# Ambiente virtual
+venv/
+
+# Arquivos de credenciais e certificados
+.env
+certs/
+*.key
+.crt
+
+# Arquivos do Python
+__pycache__/
+*.pyc

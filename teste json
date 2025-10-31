@@ -1,0 +1,2108 @@
+{
+	"info": {
+		"_postman_id": "b56fed77-7e2b-4bea-b84e-8a0172cdca1f",
+		"name": "Cobrança - Cliente Copy 3",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "SANDBOX",
+			"item": [
+				{
+					"name": "Token",
+					"item": [
+						{
+							"name": "Token",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var jsonData = JSON.parse(responseBody); \r",
+											"postman.setGlobalVariable(\"access_token_sandbox\", jsonData.access_token);"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "grant_type",
+											"value": "client_credentials",
+											"type": "text"
+										},
+										{
+											"key": "client_id",
+											"value": "{{ClientID_SDX}}",
+											"type": "text"
+										},
+										{
+											"key": "client_secret",
+											"value": "{{ClientSecret_SDX}}",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "https://openapisandbox.prebanco.com.br/auth/server-mtls/v2/token",
+									"protocol": "https",
+									"host": [
+										"openapisandbox",
+										"prebanco",
+										"com",
+										"br"
+									],
+									"path": [
+										"auth",
+										"server-mtls",
+										"v2",
+										"token"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Cobrança - Alteração de boleto",
+					"item": [
+						{
+							"name": "Alterar Título do Boleto - Sucesso",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{access_token_sandbox}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"cpfCnpj\": {\r\n        \"cpfCnpj\": 1234567,\r\n        \"filial\": 1,\r\n        \"controle\": 99\r\n    },\r\n    \"produto\": 9,\r\n    \"negociacao\": 28560222654,\r\n    \"nossoNumero\": 43310000045,\r\n    \"dadosPagador\": {\r\n        \"sacado\": \"\",\r\n        \"cpfCnpjSacado\": {\r\n            \"cpfCnpj\": 0,\r\n            \"filial\": 0,\r\n            \"controle\": 0\r\n        },\r\n        \"endereco\": \"\",\r\n        \"cep\": 0,\r\n        \"sufixo\": 0,\r\n        \"nomeSacador\": \"\",\r\n        \"aceite\": \"\",\r\n        \"cpfCnpjSacador\": {\r\n            \"cpfCnpj\": 0,\r\n            \"filial\": 0,\r\n            \"controle\": 0\r\n        },\r\n        \"emailSacado\": \"\"\r\n    },\r\n    \"dadosTitulo\": {\r\n        \"seuNumero\": \"\",\r\n        \"dataEmissao\": 0,\r\n        \"especie\": \"\",\r\n        \"vencimento\": {\r\n            \"dataVencimento\": 0,\r\n            \"tipoVencimento\": 0\r\n        },\r\n        \"protesto\": {\r\n            \"codInstrucaoProtesto\": 0,\r\n            \"qtdeDiasProtesto\": 0\r\n        },\r\n        \"decurso\": {\r\n            \"codDecursoPrazo\": 0,\r\n            \"diasDecursoPrazo\": 0\r\n        },\r\n        \"abatimento\": {\r\n            \"tipoAbatimento\": 0,\r\n            \"valorAbatimento\": 0\r\n        },\r\n        \"dataDesc1\": 0,\r\n        \"valDesc1\": 0,\r\n        \"codValDe1\": 0,\r\n        \"tipoDesc1\": 0,\r\n        \"dataDesc2\": 0,\r\n        \"valDesc2\": 0,\r\n        \"codValDe2\": 0,\r\n        \"tipoDesc2\": 0,\r\n        \"dataDesc3\": 0,\r\n        \"valDesc3\": 0,\r\n        \"codValDe3\": 0,\r\n        \"tipoDesc3\": 0,\r\n        \"codigoControleParticipante\": \"\",\r\n        \"indicadorAvisoSacado\": \"\",\r\n        \"comissaoPermanencia\": {\r\n            \"diasComissaoPermanencia\": 0,\r\n            \"valorComissaoPermanencia\": 0,\r\n            \"codigoComissaoPermanencia\": 0\r\n        },\r\n        \"codigoMulta\": 0,\r\n        \"diasMulta\": 0,\r\n        \"valorMulta\": 0.00,\r\n        \"codigoNegativacao\": 0,\r\n        \"diasNegativacao\": 0,\r\n        \"pagamentoParcial\": \"\",\r\n        \"qtdePagamentoParcial\": 0\r\n    }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://openapisandbox.prebanco.com.br/boleto/cobranca-altera/v1/alterar",
+									"protocol": "https",
+									"host": [
+										"openapisandbox",
+										"prebanco",
+										"com",
+										"br"
+									],
+									"path": [
+										"boleto",
+										"cobranca-altera",
+										"v1",
+										"alterar"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Alterar Título do Boleto - Dados faltantes para multa",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{access_token_sandbox}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"cpfCnpj\": {\r\n        \"cpfCnpj\": 1234567,\r\n        \"filial\": 1,\r\n        \"controle\": 99\r\n    },\r\n    \"produto\": 9,\r\n    \"negociacao\": 28560222654,\r\n    \"nossoNumero\": 43310000045,\r\n    \"dadosPagador\": {\r\n        \"sacado\": \"\",\r\n        \"cpfCnpjSacado\": {\r\n            \"cpfCnpj\": 0,\r\n            \"filial\": 0,\r\n            \"controle\": 0\r\n        },\r\n        \"endereco\": \"\",\r\n        \"cep\": 0,\r\n        \"sufixo\": 0,\r\n        \"nomeSacador\": \"\",\r\n        \"aceite\": \"\",\r\n        \"cpfCnpjSacador\": {\r\n            \"cpfCnpj\": 0,\r\n            \"filial\": 0,\r\n            \"controle\": 0\r\n        },\r\n        \"emailSacado\": \"\"\r\n    },\r\n    \"dadosTitulo\": {\r\n        \"seuNumero\": \"\",\r\n        \"dataEmissao\": 0,\r\n        \"especie\": \"\",\r\n        \"vencimento\": {\r\n            \"dataVencimento\": 0,\r\n            \"tipoVencimento\": 0\r\n        },\r\n        \"protesto\": {\r\n            \"codInstrucaoProtesto\": 0,\r\n            \"qtdeDiasProtesto\": 0\r\n        },\r\n        \"decurso\": {\r\n            \"codDecursoPrazo\": 0,\r\n            \"diasDecursoPrazo\": 0\r\n        },\r\n        \"abatimento\": {\r\n            \"tipoAbatimento\": 0,\r\n            \"valorAbatimento\": 0\r\n        },\r\n        \"dataDesc1\": 0,\r\n        \"valDesc1\": 0,\r\n        \"codValDe1\": 0,\r\n        \"tipoDesc1\": 0,\r\n        \"dataDesc2\": 0,\r\n        \"valDesc2\": 0,\r\n        \"codValDe2\": 0,\r\n        \"tipoDesc2\": 0,\r\n        \"dataDesc3\": 0,\r\n        \"valDesc3\": 0,\r\n        \"codValDe3\": 0,\r\n        \"tipoDesc3\": 0,\r\n        \"codigoControleParticipante\": \"\",\r\n        \"indicadorAvisoSacado\": \"\",\r\n        \"comissaoPermanencia\": {\r\n            \"diasComissaoPermanencia\": 0,\r\n            \"valorComissaoPermanencia\": 0,\r\n            \"codigoComissaoPermanencia\": 0\r\n        },\r\n        \"codigoMulta\": 0,\r\n        \"diasMulta\": 1,\r\n        \"valorMulta\": 100.00,\r\n        \"codigoNegativacao\": 0,\r\n        \"diasNegativacao\": 0,\r\n        \"pagamentoParcial\": \"\",\r\n        \"qtdePagamentoParcial\": 0\r\n    }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://openapisandbox.prebanco.com.br/boleto/cobranca-altera/v1/alterar",
+									"protocol": "https",
+									"host": [
+										"openapisandbox",
+										"prebanco",
+										"com",
+										"br"
+									],
+									"path": [
+										"boleto",
+										"cobranca-altera",
+										"v1",
+										"alterar"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Alterar Título do Boleto - Titulo inexistente",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{access_token_sandbox}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n      \"cpfCnpj\": {\r\n        \"cpfCnpj\": 123457,\r\n        \"filial\": 1,\r\n        \"controle\": 99\r\n      },\r\n      \"produto\": 9,\r\n      \"negociacao\": 28560222654,\r\n      \"nossoNumero\": 43310000045,\r\n      \"dadosPagador\": {\r\n        \"sacado\": \"\",\r\n        \"cpfCnpjSacado\": {\r\n          \"cpfCnpj\": 0,\r\n          \"filial\": 0,\r\n          \"controle\": 0\r\n        },\r\n        \"endereco\": \"AVENIDA COPACABANA\",\r\n        \"cep\": 43210,\r\n        \"sufixo\": 987,\r\n        \"nomeSacador\": \"JOSE SANTOS\",\r\n        \"aceite\": \"\",\r\n        \"cpfCnpjSacador\": {\r\n          \"cpfCnpj\": 97218313,\r\n          \"filial\": 0,\r\n          \"controle\": 88\r\n        },\r\n        \"emailSacado\": \"\"\r\n      },\r\n      \"dadosTitulo\": {\r\n        \"seuNumero\": \"\",\r\n        \"dataEmissao\": 0,\r\n        \"especie\": \"\",\r\n        \"vencimento\": {\r\n          \"dataVencimento\": 0,\r\n          \"tipoVencimento\": 0\r\n        },\r\n        \"protesto\": {\r\n          \"codInstrucaoProtesto\": 0,\r\n          \"qtdeDiasProtesto\": 0\r\n        },\r\n        \"decurso\": {\r\n          \"codDecursoPrazo\": 0,\r\n          \"diasDecursoPrazo\": 0\r\n        },\r\n        \"abatimento\": {\r\n          \"tipoAbatimento\": 0,\r\n          \"valorAbatimento\": 0\r\n        },\r\n        \"dataDesc1\": 0,\r\n        \"valDesc1\": 0,\r\n        \"codValDe1\": 0,\r\n        \"tipoDesc1\": 0,\r\n        \"dataDesc2\": 0,\r\n        \"valDesc2\": 0,\r\n        \"codValDe2\": 0,\r\n        \"tipoDesc2\": 0,\r\n        \"dataDesc3\": 0,\r\n        \"valDesc3\": 0,\r\n        \"codValDe3\": 0,\r\n        \"tipoDesc3\": 0,\r\n        \"codigoControleParticipante\": \"\",\r\n        \"indicadorAvisoSacado\": \"\",\r\n        \"comissaoPermanencia\": {\r\n          \"diasComissaoPermanencia\": 0,\r\n          \"valorComissaoPermanencia\": 0,\r\n          \"codigoComissaoPermanencia\": 0\r\n        },\r\n        \"codigoMulta\": 0,\r\n        \"diasMulta\": 0,\r\n        \"valorMulta\": 0,\r\n        \"codigoNegativacao\": 0,\r\n        \"diasNegativacao\": 0,\r\n        \"pagamentoParcial\": \"\",\r\n        \"qtdePagamentoParcial\": 0\r\n    }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://openapisandbox.prebanco.com.br/boleto/cobranca-altera/v1/alterar",
+									"protocol": "https",
+									"host": [
+										"openapisandbox",
+										"prebanco",
+										"com",
+										"br"
+									],
+									"path": [
+										"boleto",
+										"cobranca-altera",
+										"v1",
+										"alterar"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Alterar Título do Boleto - CPF/CNPJ do sacador inválido",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{access_token_sandbox}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"cpfCnpj\": {\r\n    \"cpfCnpj\": 123457,\r\n    \"filial\": 1,\r\n    \"controle\": 99\r\n  },\r\n  \"produto\": 9,\r\n  \"negociacao\": 28560222654,\r\n  \"nossoNumero\": 43310000045,\r\n  \"dadosPagador\": {\r\n    \"sacado\": \"\",\r\n    \"cpfCnpjSacado\": {\r\n      \"cpfCnpj\": 0,\r\n      \"filial\": 0,\r\n      \"controle\": 0\r\n    },\r\n    \"endereco\": \"AVENIDA COPACABANA\",\r\n    \"cep\": 43210,\r\n    \"sufixo\": 987,\r\n    \"nomeSacador\": \"JOSE SANTOS\",\r\n    \"aceite\": \"\",\r\n    \"cpfCnpjSacador\": {\r\n      \"cpfCnpj\": 972313,\r\n      \"filial\": 0,\r\n      \"controle\": 88\r\n    },\r\n    \"emailSacado\": \"\"\r\n  },\r\n  \"dadosTitulo\": {\r\n    \"seuNumero\": \"\",\r\n    \"dataEmissao\": 0,\r\n    \"especie\": \"\",\r\n    \"vencimento\": {\r\n      \"dataVencimento\": 0,\r\n      \"tipoVencimento\": 0\r\n    },\r\n    \"protesto\": {\r\n      \"codInstrucaoProtesto\": 0,\r\n      \"qtdeDiasProtesto\": 0\r\n    },\r\n    \"decurso\": {\r\n      \"codDecursoPrazo\": 0,\r\n      \"diasDecursoPrazo\": 0\r\n    },\r\n    \"abatimento\": {\r\n      \"tipoAbatimento\": 0,\r\n      \"valorAbatimento\": 0\r\n    },\r\n    \"dataDesc1\": 0,\r\n    \"valDesc1\": 0,\r\n    \"codValDe1\": 0,\r\n    \"tipoDesc1\": 0,\r\n    \"dataDesc2\": 0,\r\n    \"valDesc2\": 0,\r\n    \"codValDe2\": 0,\r\n    \"tipoDesc2\": 0,\r\n    \"dataDesc3\": 0,\r\n    \"valDesc3\": 0,\r\n    \"codValDe3\": 0,\r\n    \"tipoDesc3\": 0,\r\n    \"codigoControleParticipante\": \"\",\r\n    \"indicadorAvisoSacado\": \"\",\r\n    \"comissaoPermanencia\": {\r\n      \"diasComissaoPermanencia\": 0,\r\n      \"valorComissaoPermanencia\": 0,\r\n      \"codigoComissaoPermanencia\": 0\r\n    },\r\n    \"codigoMulta\": 0,\r\n    \"diasMulta\": 0,\r\n    \"valorMulta\": 0,\r\n    \"codigoNegativacao\": 0,\r\n    \"diasNegativacao\": 0,\r\n    \"pagamentoParcial\": \"\",\r\n    \"qtdePagamentoParcial\": 0\r\n  }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://openapisandbox.prebanco.com.br/boleto/cobranca-altera/v1/alterar",
+									"protocol": "https",
+									"host": [
+										"openapisandbox",
+										"prebanco",
+										"com",
+										"br"
+									],
+									"path": [
+										"boleto",
+										"cobranca-altera",
+										"v1",
+										"alterar"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Cobrança - Registro de boleto",
+					"item": [
+						{
+							"name": "Boleto de Cobrança Convencional - Sucesso",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{access_token_sandbox}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"debitoAutomatico\": \"N\",\r\n    \"codigoUsuarioSolicitante\": \"APISERVIC\",\r\n    \"nuCPFCNPJ\": \"12345678\",\r\n    \"filialCPFCNPJ\": 1018,\r\n    \"ctrlCPFCNPJ\": 38,\r\n    \"registraTitulo\": 1,\r\n    \"idProduto\": 9,\r\n    \"nuNegociacao\": 386100000000041000,\r\n    \"nuTitulo\": 0,\r\n    \"nuCliente\": \"WEBSERVICE\",\r\n    \"dtEmissaoTitulo\": \"07.06.2025\",\r\n    \"dtVencimentoTitulo\": \"07.08.2025\",\r\n    \"tpVencimento\": 0,\r\n    \"indicadorMoeda\": 0,\r\n    \"vlNominalTitulo\": 1000.00,\r\n    \"qmoedaNegocTitlo\": 0,\r\n    \"cdEspecieTitulo\": 1,\r\n    \"cindcdAceitSacdo\": \"2\",\r\n    \"tpProtestoAutomaticoNegativacao\": 0,\r\n    \"prazoProtestoAutomaticoNegativacao\": 0,\r\n    \"tipoDiasDecursoProt\": 0,\r\n    \"tipoDecursoPrazo\": 0,\r\n    \"controleParticipante\": \"\",\r\n    \"cdPagamentoParcial\": \"\",\r\n    \"qtdePagamentoParcial\": 0,\r\n    \"tipoPrazoDecursoTres\": 0,\r\n    \"percentualJuros\": 0,\r\n    \"vlJuros\": 0,\r\n    \"qtdeDiasJuros\": 0,\r\n    \"percentualMulta\": 0,\r\n    \"vlMulta\": 0,\r\n    \"qtdeDiasMulta\": 0,\r\n    \"percentualDesconto1\": 0,\r\n    \"vlDesconto1\": 0,\r\n    \"dataLimiteDesconto1\": \"\",\r\n    \"percentualDesconto2\": 0,\r\n    \"vlDesconto2\": 0,\r\n    \"dataLimiteDesconto2\": \"\",\r\n    \"percentualDesconto3\": 0,\r\n    \"vlDesconto3\": 0,\r\n    \"dataLimiteDesconto3\": \"\",\r\n    \"prazoBonificacao\": 0,\r\n    \"percentualBonificacao\": 0,\r\n    \"vlBonificacao\": 0,\r\n    \"dtLimiteBonificacao\": \"\",\r\n    \"vlAbatimento\": 0,\r\n    \"vlIOF\": 0,\r\n    \"nomePagador\": \"TESTE BE\",\r\n    \"logradouroPagador\": \"AVENIDA COPACABANA\",\r\n    \"nuLogradouroPagador\": \"237\",\r\n    \"complementoLogradouroPagador\": \"3 ANDAR\",\r\n    \"cepPagador\": 6050,\r\n    \"complementoCepPagador\": 40,\r\n    \"bairroPagador\": \"ALPHAVILLE\",\r\n    \"municipioPagador\": \"BARUERI\",\r\n    \"ufPagador\": \"SP\",\r\n    \"cdIndCpfcnpjPagador\": 1,\r\n    \"nuCpfcnpjPagador\": 11438390807,\r\n    \"endEletronicoPagador\": \"\",\r\n    \"dddFoneSacado\": 0,\r\n    \"foneSacado\": 0,\r\n    \"bancoDoDebAutomatico\": 237,\r\n    \"agenciaDoDebAutomatico\": 2,\r\n    \"digitoAgenciaDoDebAutomat\": 7,\r\n    \"contaDoDebAutomatico\": 5223,\r\n    \"razaoDoDebAutomatico\": 705,\r\n    \"codBancoDoProtesto\": 0,\r\n    \"agenciaDoProtesto\": 0,\r\n    \"nomeSacadorAvalista\": \"A\",\r\n    \"logradouroSacadorAvalista\": \"A\",\r\n    \"nuLogradouroSacadorAvalista\": \"4\",\r\n    \"complementoLogradouroSacadorAvalista\": \"\",\r\n    \"cepSacadorAvalista\": 0,\r\n    \"complementoCepSacadorAvalista\": 0,\r\n    \"bairroSacadorAvalista\": \"D\",\r\n    \"municipioSacadorAvalista\": \"D\",\r\n    \"ufSacadorAvalista\": \"SP\",\r\n    \"cdIndCpfcnpjSacadorAvalista\": 1,\r\n    \"nuCpfcnpjSacadorAvalista\": 0,\r\n    \"enderecoSacadorAvalista\": \"DD\",\r\n    \"dddFoneSacadorAvalista\": 11,\r\n    \"foneSacadorAvalista\": 24144323,\r\n    \"listaMsgs\": [\r\n        {\r\n            \"mensagem\": \"Teste MSG 1\"\r\n        },\r\n        {\r\n            \"mensagem\": \"Teste MSG 2\"\r\n        }\r\n    ]\r\n}\r\n ",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://openapisandbox.prebanco.com.br/boleto/cobranca-registro/v1/cobranca",
+									"protocol": "https",
+									"host": [
+										"openapisandbox",
+										"prebanco",
+										"com",
+										"br"
+									],
+									"path": [
+										"boleto",
+										"cobranca-registro",
+										"v1",
+										"cobranca"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Boleto de Cobrança Convencional - Erro  Código espécie",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{access_token_sandbox}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"debitoAutomatico\": \"N\",\r\n    \"codigoUsuarioSolicitante\": \"APISERVIC\",\r\n    \"nuCPFCNPJ\": \"12345678\",\r\n    \"filialCPFCNPJ\": 1018,\r\n    \"ctrlCPFCNPJ\": 38,\r\n    \"registraTitulo\": 1,\r\n    \"idProduto\": 9,\r\n    \"nuNegociacao\": 386100000000041000,\r\n    \"nuTitulo\": 0,\r\n    \"nuCliente\": \"WEBSERVICE\",\r\n    \"dtEmissaoTitulo\": \"07.06.2025\",\r\n    \"dtVencimentoTitulo\": \"07.08.2025\",\r\n    \"tpVencimento\": 0,\r\n    \"indicadorMoeda\": 0,\r\n    \"vlNominalTitulo\": 1000.00,\r\n    \"qmoedaNegocTitlo\": 0,\r\n    \"cdEspecieTitulo\": 77,\r\n    \"cindcdAceitSacdo\": \"2\",\r\n    \"tpProtestoAutomaticoNegativacao\": 0,\r\n    \"prazoProtestoAutomaticoNegativacao\": 0,\r\n    \"tipoDiasDecursoProt\": 0,\r\n    \"tipoDecursoPrazo\": 0,\r\n    \"controleParticipante\": \"\",\r\n    \"cdPagamentoParcial\": \"\",\r\n    \"qtdePagamentoParcial\": 0,\r\n    \"tipoPrazoDecursoTres\": 0,\r\n    \"percentualJuros\": 0,\r\n    \"vlJuros\": 0,\r\n    \"qtdeDiasJuros\": 0,\r\n    \"percentualMulta\": 0,\r\n    \"vlMulta\": 0,\r\n    \"qtdeDiasMulta\": 0,\r\n    \"percentualDesconto1\": 0,\r\n    \"vlDesconto1\": 0,\r\n    \"dataLimiteDesconto1\": \"\",\r\n    \"percentualDesconto2\": 0,\r\n    \"vlDesconto2\": 0,\r\n    \"dataLimiteDesconto2\": \"\",\r\n    \"percentualDesconto3\": 0,\r\n    \"vlDesconto3\": 0,\r\n    \"dataLimiteDesconto3\": \"\",\r\n    \"prazoBonificacao\": 0,\r\n    \"percentualBonificacao\": 0,\r\n    \"vlBonificacao\": 0,\r\n    \"dtLimiteBonificacao\": \"\",\r\n    \"vlAbatimento\": 0,\r\n    \"vlIOF\": 0,\r\n    \"nomePagador\": \"TESTE BE\",\r\n    \"logradouroPagador\": \"AVENIDA COPACABANA\",\r\n    \"nuLogradouroPagador\": \"237\",\r\n    \"complementoLogradouroPagador\": \"3 ANDAR\",\r\n    \"cepPagador\": 6050,\r\n    \"complementoCepPagador\": 40,\r\n    \"bairroPagador\": \"ALPHAVILLE\",\r\n    \"municipioPagador\": \"BARUERI\",\r\n    \"ufPagador\": \"SP\",\r\n    \"cdIndCpfcnpjPagador\": 1,\r\n    \"nuCpfcnpjPagador\": 11438390807,\r\n    \"endEletronicoPagador\": \"\",\r\n    \"dddFoneSacado\": 0,\r\n    \"foneSacado\": 0,\r\n    \"bancoDoDebAutomatico\": 237,\r\n    \"agenciaDoDebAutomatico\": 2,\r\n    \"digitoAgenciaDoDebAutomat\": 7,\r\n    \"contaDoDebAutomatico\": 5223,\r\n    \"razaoDoDebAutomatico\": 705,\r\n    \"codBancoDoProtesto\": 0,\r\n    \"agenciaDoProtesto\": 0,\r\n    \"nomeSacadorAvalista\": \"A\",\r\n    \"logradouroSacadorAvalista\": \"A\",\r\n    \"nuLogradouroSacadorAvalista\": \"4\",\r\n    \"complementoLogradouroSacadorAvalista\": \"\",\r\n    \"cepSacadorAvalista\": 0,\r\n    \"complementoCepSacadorAvalista\": 0,\r\n    \"bairroSacadorAvalista\": \"D\",\r\n    \"municipioSacadorAvalista\": \"D\",\r\n    \"ufSacadorAvalista\": \"SP\",\r\n    \"cdIndCpfcnpjSacadorAvalista\": 1,\r\n    \"nuCpfcnpjSacadorAvalista\": 0,\r\n    \"enderecoSacadorAvalista\": \"DD\",\r\n    \"dddFoneSacadorAvalista\": 11,\r\n    \"foneSacadorAvalista\": 24144323,\r\n    \"listaMsgs\": [\r\n        {\r\n            \"mensagem\": \"Teste MSG 1\"\r\n        },\r\n        {\r\n            \"mensagem\": \"Teste MSG 2\"\r\n        }\r\n    ]\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://openapisandbox.prebanco.com.br/boleto/cobranca-registro/v1/cobranca",
+									"protocol": "https",
+									"host": [
+										"openapisandbox",
+										"prebanco",
+										"com",
+										"br"
+									],
+									"path": [
+										"boleto",
+										"cobranca-registro",
+										"v1",
+										"cobranca"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Boleto de Cobrança Convencional - Documento inválido",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{access_token_sandbox}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"debitoAutomatico\": \"N\",\r\n    \"codigoUsuarioSolicitante\": \"APISERVIC\",\r\n    \"nuCPFCNPJ\": \"12345678\",\r\n    \"filialCPFCNPJ\": 1018,\r\n    \"ctrlCPFCNPJ\": 38,\r\n    \"registraTitulo\": 1,\r\n    \"idProduto\": 9,\r\n    \"nuNegociacao\": 386100000000041000,\r\n    \"nuTitulo\": 0,\r\n    \"nuCliente\": \"WEBSERVICE\",\r\n    \"dtEmissaoTitulo\": \"07.06.2025\",\r\n    \"dtVencimentoTitulo\": \"07.08.2025\",\r\n    \"tpVencimento\": 0,\r\n    \"indicadorMoeda\": 0,\r\n    \"vlNominalTitulo\": 1000.00,\r\n    \"qmoedaNegocTitlo\": 0,\r\n    \"cdEspecieTitulo\": 77,\r\n    \"cindcdAceitSacdo\": \"2\",\r\n    \"tpProtestoAutomaticoNegativacao\": 0,\r\n    \"prazoProtestoAutomaticoNegativacao\": 0,\r\n    \"tipoDiasDecursoProt\": 0,\r\n    \"tipoDecursoPrazo\": 0,\r\n    \"controleParticipante\": \"\",\r\n    \"cdPagamentoParcial\": \"\",\r\n    \"qtdePagamentoParcial\": 0,\r\n    \"tipoPrazoDecursoTres\": 0,\r\n    \"percentualJuros\": 0,\r\n    \"vlJuros\": 0,\r\n    \"qtdeDiasJuros\": 0,\r\n    \"percentualMulta\": 999.99,\r\n    \"vlMulta\": 0,\r\n    \"qtdeDiasMulta\": 0,\r\n    \"percentualDesconto1\": 0,\r\n    \"vlDesconto1\": 0,\r\n    \"dataLimiteDesconto1\": \"\",\r\n    \"percentualDesconto2\": 0,\r\n    \"vlDesconto2\": 0,\r\n    \"dataLimiteDesconto2\": \"\",\r\n    \"percentualDesconto3\": 0,\r\n    \"vlDesconto3\": 0,\r\n    \"dataLimiteDesconto3\": \"\",\r\n    \"prazoBonificacao\": 0,\r\n    \"percentualBonificacao\": 0,\r\n    \"vlBonificacao\": 0,\r\n    \"dtLimiteBonificacao\": \"\",\r\n    \"vlAbatimento\": 0,\r\n    \"vlIOF\": 0,\r\n    \"nomePagador\": \"TESTE BE\",\r\n    \"logradouroPagador\": \"AVENIDA COPACABANA\",\r\n    \"nuLogradouroPagador\": \"237\",\r\n    \"complementoLogradouroPagador\": \"3 ANDAR\",\r\n    \"cepPagador\": 6050,\r\n    \"complementoCepPagador\": 40,\r\n    \"bairroPagador\": \"ALPHAVILLE\",\r\n    \"municipioPagador\": \"BARUERI\",\r\n    \"ufPagador\": \"SP\",\r\n    \"cdIndCpfcnpjPagador\": 1,\r\n    \"nuCpfcnpjPagador\": 11438390807,\r\n    \"endEletronicoPagador\": \"\",\r\n    \"dddFoneSacado\": 0,\r\n    \"foneSacado\": 0,\r\n    \"bancoDoDebAutomatico\": 237,\r\n    \"agenciaDoDebAutomatico\": 2,\r\n    \"digitoAgenciaDoDebAutomat\": 7,\r\n    \"contaDoDebAutomatico\": 5223,\r\n    \"razaoDoDebAutomatico\": 705,\r\n    \"codBancoDoProtesto\": 0,\r\n    \"agenciaDoProtesto\": 0,\r\n    \"nomeSacadorAvalista\": \"A\",\r\n    \"logradouroSacadorAvalista\": \"A\",\r\n    \"nuLogradouroSacadorAvalista\": \"4\",\r\n    \"complementoLogradouroSacadorAvalista\": \"\",\r\n    \"cepSacadorAvalista\": 0,\r\n    \"complementoCepSacadorAvalista\": 0,\r\n    \"bairroSacadorAvalista\": \"D\",\r\n    \"municipioSacadorAvalista\": \"D\",\r\n    \"ufSacadorAvalista\": \"SP\",\r\n    \"cdIndCpfcnpjSacadorAvalista\": 1,\r\n    \"nuCpfcnpjSacadorAvalista\": 0,\r\n    \"enderecoSacadorAvalista\": \"DD\",\r\n    \"dddFoneSacadorAvalista\": 11,\r\n    \"foneSacadorAvalista\": 24144323,\r\n    \"listaMsgs\": [\r\n        {\r\n            \"mensagem\": \"Teste MSG 1\"\r\n        },\r\n        {\r\n            \"mensagem\": \"Teste MSG 2\"\r\n        }\r\n    ]\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://openapisandbox.prebanco.com.br/boleto/cobranca-registro/v1/cobranca",
+									"protocol": "https",
+									"host": [
+										"openapisandbox",
+										"prebanco",
+										"com",
+										"br"
+									],
+									"path": [
+										"boleto",
+										"cobranca-registro",
+										"v1",
+										"cobranca"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Cobrança - Listar boletos liquidados",
+					"item": [
+						{
+							"name": "Lista de Títulos Liquidados - Sucesso",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{access_token_sandbox}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"cpfCnpj\": {\r\n        \"cpfCnpj\": 114383908,\r\n        \"filial\": 0,\r\n        \"controle\": 7\r\n    },\r\n    \"produto\": 0,\r\n    \"negociacao\": 28560230114,\r\n    \"dataMovimentoDe\": 0,\r\n    \"dataMovimentoAte\": 0,\r\n    \"dataPagamentoDe\": 0,\r\n    \"dataPagamentoAte\": 0,\r\n    \"origemPagamento\": 0,\r\n    \"valorTituloDe\": 95,\r\n    \"valorTituloAte\": 100,\r\n    \"paginaAnterior\": 0\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://openapisandbox.prebanco.com.br/boleto/cobranca-lista/v1/listar",
+									"protocol": "https",
+									"host": [
+										"openapisandbox",
+										"prebanco",
+										"com",
+										"br"
+									],
+									"path": [
+										"boleto",
+										"cobranca-lista",
+										"v1",
+										"listar"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Lista de Títulos Liquidados - Identificador do produto inválido",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{access_token_sandbox}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "  {  \"cpfCnpj\": {\r\n        \"cpfCnpj\": 1234567,\r\n        \"filial\": 0,\r\n        \"controle\": 99\r\n    },\r\n    \"produto\": 0,\r\n    \"negociacao\": 28560222654,\r\n    \"dataMovimentoDe\": 0,\r\n    \"dataMovimentoAte\": 0,\r\n    \"dataPagamentoDe\": 0,\r\n    \"dataPagamentoAte\": 0,\r\n    \"origemPagamento\": 0,\r\n    \"valorTituloDe\": 95,\r\n    \"valorTituloAte\": 100,\r\n    \"paginaAnterior\": 0\r\n}\r\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://openapisandbox.prebanco.com.br/boleto/cobranca-lista/v1/listar",
+									"protocol": "https",
+									"host": [
+										"openapisandbox",
+										"prebanco",
+										"com",
+										"br"
+									],
+									"path": [
+										"boleto",
+										"cobranca-lista",
+										"v1",
+										"listar"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Lista de Títulos Liquidados - Usuário não autorizado",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{access_token_sandbox}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"cpfCnpj\": {\r\n        \"cpfCnpj\": 1234567,\r\n        \"filial\": 0,\r\n        \"controle\": 99\r\n    },\r\n    \"produto\": 9,\r\n    \"negociacao\": 2856022654,\r\n    \"dataMovimentoDe\": 0,\r\n    \"dataMovimentoAte\": 0,\r\n    \"dataPagamentoDe\": 0,\r\n    \"dataPagamentoAte\": 0,\r\n    \"origemPagamento\": 0,\r\n    \"valorTituloDe\": 95,\r\n    \"valorTituloAte\": 100,\r\n    \"paginaAnterior\": 0\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://openapisandbox.prebanco.com.br/boleto/cobranca-lista/v1/listar",
+									"protocol": "https",
+									"host": [
+										"openapisandbox",
+										"prebanco",
+										"com",
+										"br"
+									],
+									"path": [
+										"boleto",
+										"cobranca-lista",
+										"v1",
+										"listar"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Cobrança - Cadastro de Webhook",
+					"item": [
+						{
+							"name": "Permite operação de inclusão, alteração, consulta e exclusão - Sucesso",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{access_token_sandbox}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n      \"documento\": {\r\n        \"cpfCnpj\":\"1234567\",\r\n        \"filial\":\"1\",\r\n        \"controle\":\"99\"\r\n      }\r\n    ,\r\n      \"versaoLayout\":\"1\",\r\n      \"tipoCadastro\":\"C\",\r\n      \"utilizaWebhook\":\"S\",\r\n      \"urlEnvio\":\"http://empresa.com.br\",\r\n      \"tipoAviso\":\"1\"\r\n    }\r\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://openapisandbox.prebanco.com.br/boleto/cobranca-webhook/v1/cadastrar",
+									"protocol": "https",
+									"host": [
+										"openapisandbox",
+										"prebanco",
+										"com",
+										"br"
+									],
+									"path": [
+										"boleto",
+										"cobranca-webhook",
+										"v1",
+										"cadastrar"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Permite operação de inclusão, alteração, consulta e exclusão - Cliente sem cobrança",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{access_token_sandbox}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"documento\": {\r\n        \"cpfCnpj\": \"1234510\",\r\n        \"filial\": \"1\",\r\n        \"controle\": \"10\"\r\n    },\r\n    \"versaoLayout\": \"1\",\r\n    \"tipoCadastro\": \"X\",\r\n    \"utilizaWebhook\": \"N\",\r\n    \"urlEnvio\": \"http://empresa.com.br\",\r\n    \"tipoAviso\": \"1\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://openapisandbox.prebanco.com.br/boleto/cobranca-webhook/v1/cadastrar",
+									"protocol": "https",
+									"host": [
+										"openapisandbox",
+										"prebanco",
+										"com",
+										"br"
+									],
+									"path": [
+										"boleto",
+										"cobranca-webhook",
+										"v1",
+										"cadastrar"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Permite operação de inclusão, alteração, consulta e exclusão - Cliente sem cadastro webhook",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{access_token_sandbox}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"documento\": {\r\n        \"cpfCnpj\": \"1234511\",\r\n        \"filial\": \"1\",\r\n        \"controle\": \"11\"\r\n    },\r\n    \"versaoLayout\": \"1\",\r\n    \"tipoCadastro\": \"X\",\r\n    \"utilizaWebhook\": \"N\",\r\n    \"urlEnvio\": \"http://empresa.com.br\",\r\n    \"tipoAviso\": \"1\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://openapisandbox.prebanco.com.br/boleto/cobranca-webhook/v1/cadastrar",
+									"protocol": "https",
+									"host": [
+										"openapisandbox",
+										"prebanco",
+										"com",
+										"br"
+									],
+									"path": [
+										"boleto",
+										"cobranca-webhook",
+										"v1",
+										"cadastrar"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Cobrança - Solicitação de baixa de boleto",
+					"item": [
+						{
+							"name": "Solicitação Baixa de Título - Sucesso",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{access_token_sandbox}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"cpfCnpj\": {\r\n        \"cpfCnpj\": \"1234567\",\r\n        \"filial\": \"1\",\r\n        \"controle\": \"99\"\r\n    },\r\n    \"produto\": 9,\r\n    \"negociacao\": 28560222654,\r\n    \"nossoNumero\": \"50150001462\",\r\n    \"sequencia\": 0,\r\n    \"codigoBaixa\": 57\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://openapisandbox.prebanco.com.br/boleto/cobranca-baixa/v1/baixar",
+									"protocol": "https",
+									"host": [
+										"openapisandbox",
+										"prebanco",
+										"com",
+										"br"
+									],
+									"path": [
+										"boleto",
+										"cobranca-baixa",
+										"v1",
+										"baixar"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Solicitação Baixa de Título - Código de baixa inválido",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{access_token_sandbox}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"cpfCnpj\": {\r\n        \"cpfCnpj\": \"1234567\",\r\n        \"filial\": \"1\",\r\n        \"controle\": \"99\"\r\n    },\r\n    \"produto\": 9,\r\n    \"negociacao\": 28560222654,\r\n    \"nossoNumero\": 100,\r\n    \"sequencia\": 0,\r\n    \"codigoBaixa\": 10\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://openapisandbox.prebanco.com.br/boleto/cobranca-baixa/v1/baixar",
+									"protocol": "https",
+									"host": [
+										"openapisandbox",
+										"prebanco",
+										"com",
+										"br"
+									],
+									"path": [
+										"boleto",
+										"cobranca-baixa",
+										"v1",
+										"baixar"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Solicitação Baixa de Título - CPF/CNPJ inválido",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{access_token_sandbox}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n      \"cpfCnpj\": { \r\n        \"cpfCnpj\": \"134567\", \r\n        \"filial\": \"1\", \r\n        \"controle\": \"99\" },\r\n      \"produto\": 9,\r\n      \"negociacao\": 28560222654,\r\n      \"nossoNumero\": 100,\r\n      \"sequencia\": 0,\r\n      \"codigoBaixa\": 57\r\n    }",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://openapisandbox.prebanco.com.br/boleto/cobranca-baixa/v1/baixar",
+									"protocol": "https",
+									"host": [
+										"openapisandbox",
+										"prebanco",
+										"com",
+										"br"
+									],
+									"path": [
+										"boleto",
+										"cobranca-baixa",
+										"v1",
+										"baixar"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Solicitação Baixa de Título - Titulo inexistente",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{access_token_sandbox}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"cpfCnpj\": {\r\n        \"cpfCnpj\": \"1234567\",\r\n        \"filial\": \"1\",\r\n        \"controle\": \"99\"\r\n    },\r\n    \"produto\": 9,\r\n    \"negociacao\": 28560222654,\r\n    \"nossoNumero\": 100,\r\n    \"sequencia\": 0,\r\n    \"codigoBaixa\": 57\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://openapisandbox.prebanco.com.br/boleto/cobranca-baixa/v1/baixar",
+									"protocol": "https",
+									"host": [
+										"openapisandbox",
+										"prebanco",
+										"com",
+										"br"
+									],
+									"path": [
+										"boleto",
+										"cobranca-baixa",
+										"v1",
+										"baixar"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Cobrança - Consulta de boleto especifico e emissão de 2ª via",
+					"item": [
+						{
+							"name": "Consulta dados de Título Específico - Sucesso",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{access_token_sandbox}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"cpfCnpj\": {\r\n        \"cpfCnpj\": 31759488,\r\n        \"filial\": 0,\r\n        \"controle\": 55\r\n    },\r\n    \"produto\": 9,\r\n    \"negociacao\": 2856022652,\r\n    \"nossoNumero\": 50130000040,\r\n    \"sequencia\": 0,\r\n    \"status\": 0\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://openapisandbox.prebanco.com.br/boleto/cobranca-consulta/v1/consultar",
+									"protocol": "https",
+									"host": [
+										"openapisandbox",
+										"prebanco",
+										"com",
+										"br"
+									],
+									"path": [
+										"boleto",
+										"cobranca-consulta",
+										"v1",
+										"consultar"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Consulta dados de Título Específico - Sucesso",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{access_token_sandbox}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"cpfCnpj\": {\r\n        \"cpfCnpj\": 31759488,\r\n        \"filial\": 0,\r\n        \"controle\": 55\r\n    },\r\n    \"produto\": 9,\r\n    \"negociacao\": 2856022652,\r\n    \"nossoNumero\": 50130000040,\r\n    \"sequencia\": 0,\r\n    \"status\": 0\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://openapisandbox.prebanco.com.br/boleto/cobranca-consulta/v1/consultar",
+									"protocol": "https",
+									"host": [
+										"openapisandbox",
+										"prebanco",
+										"com",
+										"br"
+									],
+									"path": [
+										"boleto",
+										"cobranca-consulta",
+										"v1",
+										"consultar"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Consulta dados de Título Específico - Usuário não autorizado",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{access_token_sandbox}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"cpfCnpj\": {\r\n        \"cpfCnpj\": 31759488,\r\n        \"filial\": 0,\r\n        \"controle\": 55\r\n    },\r\n    \"produto\": 9,\r\n    \"negociacao\": 2856022652,\r\n    \"nossoNumero\": 50130000041,\r\n    \"sequencia\": 0,\r\n    \"status\": 0\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://openapisandbox.prebanco.com.br/boleto/cobranca-consulta/v1/consultar",
+									"protocol": "https",
+									"host": [
+										"openapisandbox",
+										"prebanco",
+										"com",
+										"br"
+									],
+									"path": [
+										"boleto",
+										"cobranca-consulta",
+										"v1",
+										"consultar"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Consulta dados de Título Específico - Identificador do produto inválido",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{access_token_sandbox}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n      \"cpfCnpj\": { \r\n        \"cpfCnpj\": 31759488, \r\n        \"filial\": 0, \r\n        \"controle\": 55 },\r\n      \"produto\": 0,\r\n      \"negociacao\": 28560222652,\r\n      \"nossoNumero\": 50130000041,\r\n      \"sequencia\": 0,\r\n      \"status\": 0\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://openapisandbox.prebanco.com.br/boleto/cobranca-consulta/v1/consultar",
+									"protocol": "https",
+									"host": [
+										"openapisandbox",
+										"prebanco",
+										"com",
+										"br"
+									],
+									"path": [
+										"boleto",
+										"cobranca-consulta",
+										"v1",
+										"consultar"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Cobrança - Lista de Títulos Baixados",
+					"item": [
+						{
+							"name": "Lista de Títulos Baixados - Sucesso",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{access_token_sandbox}}",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n   \"versao\": 1,\r\n   \"cpfCnpj\": {\r\n       \"cpfCnpj\": 114383908,\r\n       \"filial\": 0,\r\n       \"controle\": 7\r\n   },\r\n   \"produto\": 9,\r\n   \"negociacao\": 28560222652,\r\n   \"dataVencimentoDe\": 20200106,\r\n   \"dataVencimentoAte\": 20250206,\r\n   \"valorTituloInicio\": 0,\r\n   \"codigoBaixa\": 0,\r\n   \"paginaAnterior\": 0\r\n}"
+								},
+								"url": {
+									"raw": "https://openapisandbox.prebanco.com.br/boleto/cobranca-baixado-consulta/v1/listar",
+									"protocol": "https",
+									"host": [
+										"openapisandbox",
+										"prebanco",
+										"com",
+										"br"
+									],
+									"path": [
+										"boleto",
+										"cobranca-baixado-consulta",
+										"v1",
+										"listar"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Lista de Títulos Baixados - Data de inicio inválida",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{access_token_sandbox}}",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n   \"versao\": 1,\r\n   \"cpfCnpj\": {\r\n       \"cpfCnpj\": 114383908,\r\n       \"filial\": 0,\r\n       \"controle\": 7\r\n   },\r\n   \"produto\": 9,\r\n   \"negociacao\": 28560222652,\r\n   \"dataVencimentoDe\": 1,\r\n   \"dataVencimentoAte\": 0,\r\n   \"valorTituloInicio\": 0,\r\n   \"codigoBaixa\": 0,\r\n   \"paginaAnterior\": 0\r\n}"
+								},
+								"url": {
+									"raw": "https://openapisandbox.prebanco.com.br/boleto/cobranca-baixado-consulta/v1/listar",
+									"protocol": "https",
+									"host": [
+										"openapisandbox",
+										"prebanco",
+										"com",
+										"br"
+									],
+									"path": [
+										"boleto",
+										"cobranca-baixado-consulta",
+										"v1",
+										"listar"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Cobrança - Consulta lista de boletos pendentes de liquidação",
+					"item": [
+						{
+							"name": "Consulta lista de boletos pendentes de liquidação - Sucesso",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{access_token_sandbox}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"cpfCnpj\": {\r\n        \"cpfCnpj\": 114383908,\r\n        \"filial\": 0,\r\n        \"controle\": 2\r\n    },\r\n    \"produto\": 1,\r\n    \"negociacao\": 28560230114,\r\n    \"nossoNumero\": 0,\r\n    \"cpfCnpjPagador\": {\r\n        \"cpfCnpj\": 0,\r\n        \"filial\": 0,\r\n        \"controle\": 0\r\n    },\r\n    \"dataVencimentoDe\": 0,\r\n    \"dataVencimentoAte\": 0,\r\n    \"dataRegistroDe\": 0,\r\n    \"dataRegistroAte\": 0,\r\n    \"valorTituloDe\": 0,\r\n    \"faixaVencto\": 7,\r\n    \"paginaAnterior\": 0\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://openapisandbox.prebanco.com.br/boleto/cobranca-pendente/v1/listar",
+									"protocol": "https",
+									"host": [
+										"openapisandbox",
+										"prebanco",
+										"com",
+										"br"
+									],
+									"path": [
+										"boleto",
+										"cobranca-pendente",
+										"v1",
+										"listar"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Consulta lista de boletos pendentes de liquidação - Erro Faixa de vencimento",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{access_token_sandbox}}",
+										"type": "text"
+									},
+									{
+										"key": "",
+										"value": "",
+										"type": "text",
+										"disabled": true
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"cpfCnpj\": {\r\n        \"cpfCnpj\": 114383908,\r\n        \"filial\": 0,\r\n        \"controle\": 7\r\n    },\r\n    \"produto\": 1,\r\n    \"negociacao\": 28560230114,\r\n    \"nossoNumero\": 0,\r\n    \"cpfCnpjPagador\": {\r\n        \"cpfCnpj\": 0,\r\n        \"filial\": 0,\r\n        \"controle\": 0\r\n    },\r\n    \"dataVencimentoDe\": 0,\r\n    \"dataVencimentoAte\": 0,\r\n    \"dataRegistroDe\": 0,\r\n    \"dataRegistroAte\": 0,\r\n    \"valorTituloDe\": 0,\r\n    \"faixaVencto\": 7,\r\n    \"paginaAnterior\": 0\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://openapisandbox.prebanco.com.br/boleto/cobranca-pendente/v1/listar",
+									"protocol": "https",
+									"host": [
+										"openapisandbox",
+										"prebanco",
+										"com",
+										"br"
+									],
+									"path": [
+										"boleto",
+										"cobranca-pendente",
+										"v1",
+										"listar"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Consulta lista de boletos pendentes de liquidação - Usuário não autorizado",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{access_token_sandbox}}",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"cpfCnpj\": {\r\n        \"cpfCnpj\": 114383908,\r\n        \"filial\": 0,\r\n        \"controle\": 7\r\n    },\r\n    \"produto\": 1,\r\n    \"negociacao\": 2856020114,\r\n    \"nossoNumero\": 0,\r\n    \"cpfCnpjPagador\": {\r\n        \"cpfCnpj\": 0,\r\n        \"filial\": 0,\r\n        \"controle\": 0\r\n    },\r\n    \"dataVencimentoDe\": 0,\r\n    \"dataVencimentoAte\": 0,\r\n    \"dataRegistroDe\": 0,\r\n    \"dataRegistroAte\": 0,\r\n    \"valorTituloDe\": 0,\r\n    \"faixaVencto\": 7,\r\n    \"paginaAnterior\": 0\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://openapisandbox.prebanco.com.br/boleto/cobranca-pendente/v1/listar",
+									"protocol": "https",
+									"host": [
+										"openapisandbox",
+										"prebanco",
+										"com",
+										"br"
+									],
+									"path": [
+										"boleto",
+										"cobranca-pendente",
+										"v1",
+										"listar"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Cobrança - Protesto e Negativação de Boletos",
+					"item": [
+						{
+							"name": "Cobrança - Protesto e Negativação de Boletos - Sucesso",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{access_token_sandbox}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"codigoProduto\": \"48\",\r\n  \"nossoNumero\": \"43189498557\",\r\n  \"codigoFuncao\": \"\",\r\n  \"parmFuncao\": \"\",\r\n  \"cpfCnpj\": {\r\n    \"filial\": \"0001\",\r\n    \"cpfCnpj\": \"999999999\",\r\n    \"controle\": \"99\"\r\n  },\r\n  \"contaProduto\": \"40970743138\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://openapisandbox.prebanco.com.br/boleto/cobranca-protesto-negativacao/v1/executar",
+									"protocol": "https",
+									"host": [
+										"openapisandbox",
+										"prebanco",
+										"com",
+										"br"
+									],
+									"path": [
+										"boleto",
+										"cobranca-protesto-negativacao",
+										"v1",
+										"executar"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Cobrança - Protesto e Negativação de Boletos - Documento inválido",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{access_token_sandbox}}",
+										"type": "text"
+									},
+									{
+										"key": "",
+										"value": "",
+										"type": "text",
+										"disabled": true
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"cpfCnpj\": {\r\n        \"cpfCnpj\": 559691048,\r\n        \"filial\": 0,\r\n        \"controle\": 17\r\n    },\r\n    \"codigoProduto\": 9,\r\n    \"contaProduto\": 28560222652,\r\n    \"nossoNumero\": 299952444,\r\n    \"codigoFuncao\": 1,\r\n    \"parmFuncao\": \"F\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://openapisandbox.prebanco.com.br/boleto/cobranca-protesto-negativacao/v1/executar",
+									"protocol": "https",
+									"host": [
+										"openapisandbox",
+										"prebanco",
+										"com",
+										"br"
+									],
+									"path": [
+										"boleto",
+										"cobranca-protesto-negativacao",
+										"v1",
+										"executar"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Cobrança - Protesto e Negativação de Boletos - titulo inexistente",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{access_token_sandbox}}",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"cpfCnpj\": {\r\n        \"cpfCnpj\": 559691048,\r\n        \"filial\": 0,\r\n        \"controle\": 17\r\n    },\r\n    \"codigoProduto\": 9,\r\n    \"contaProduto\": 28560222652,\r\n    \"nossoNumero\": 29995244,\r\n    \"codigoFuncao\": 1,\r\n    \"parmFuncao\": \"F\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://openapisandbox.prebanco.com.br/boleto/cobranca-protesto-negativacao/v1/executar",
+									"protocol": "https",
+									"host": [
+										"openapisandbox",
+										"prebanco",
+										"com",
+										"br"
+									],
+									"path": [
+										"boleto",
+										"cobranca-protesto-negativacao",
+										"v1",
+										"executar"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Cobrança - Manutenção Split Payment - Sandbox - Sucesso",
+					"item": [
+						{
+							"name": "Cobrança - Manutenção Split Payment - Sandbox - Sucesso",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{access_token_sandbox}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"cflialCnpj\": \"0\",\r\n  \"listaRteio\": [\r\n    {\r\n      \"floatRteioBnefc\": 0,\r\n      \"cctaBnefcRteio\": 604,\r\n      \"acaoRteio\": \"I\",\r\n      \"vlrPercRteio\": \"1000\",\r\n      \"ibnefcRteioCredt\": \"BANCO RENDIMENTO S/A\",\r\n      \"cagBnefcRteio\": 4150,\r\n      \"pcelaRteioCredt\": \"\"\r\n    }\r\n  ],\r\n  \"nseqTitulo\": 0,\r\n  \"cctrlCnpjCpf\": \"10\",\r\n  \"idProduto\": \"9\",\r\n  \"ctpoVlrRteio\": 1,\r\n  \"canclRteio\": \"N\",\r\n  \"nvrsaoLyout\": 1,\r\n  \"nossoNumero\": \"30200000002\",\r\n  \"ccalcRteio\": 1,\r\n  \"cnpjCpf\": \"249049448\",\r\n  \"contaProduto\": \"20001458\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://openapisandbox.prebanco.com.br/boleto/cobranca-manutencao-split/v1/manutencao-rateio-credito",
+									"protocol": "https",
+									"host": [
+										"openapisandbox",
+										"prebanco",
+										"com",
+										"br"
+									],
+									"path": [
+										"boleto",
+										"cobranca-manutencao-split",
+										"v1",
+										"manutencao-rateio-credito"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Cobrança - Manutenção Split Payment - Sandbox -",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{access_token_sandbox}}",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"nvrsaoLyout\": 1,\r\n  \"cnpjCpf\": 249049448,\r\n  \"cflialCnpj\": 0,\r\n  \"cctrlCnpjCpf\": 10,\r\n  \"idProduto\": 9,\r\n  \"contaProduto\": 20001458,\r\n  \"nossoNumero\": 30200000002,\r\n  \"nseqTitulo\": 0,\r\n  \"ccalcRteio\": 1,\r\n  \"ctpoVlrRteio\": 1,\r\n  \"canclRteio\": \"S\",\r\n  \"listaRteio\": [ \r\n    {\r\n      \"acaoRteio\": \"I\",\r\n      \"cagBnefcRteio\": 4150,\r\n      \"cctaBnefcRteio\": 605,\r\n      \"vlrPercRteio\": \"1000\",\r\n      \"ibnefcRteioCredt\": \"BANCO RENDIMENTO S/A\",\r\n      \"pcelaRteioCredt\": \"\",\r\n      \"floatRteioBnefc\": 0\r\n    }\r\n  ]\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://openapisandbox.prebanco.com.br/boleto/cobranca-manutencao-split/v1/manutencao-rateio-credito",
+									"protocol": "https",
+									"host": [
+										"openapisandbox",
+										"prebanco",
+										"com",
+										"br"
+									],
+									"path": [
+										"boleto",
+										"cobranca-manutencao-split",
+										"v1",
+										"manutencao-rateio-credito"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Cobrança - Consulta Split Payment",
+					"item": [
+						{
+							"name": "Cobrança - Consulta Split Payment - Sucesso",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{access_token_sandbox}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"cflialCnpj\": 0,\r\n  \"nseqTitulo\": 0,\r\n  \"cctrlCnpjCpf\": 79,\r\n  \"idProduto\": 9,\r\n  \"nvrsaoLyout\": 1,\r\n  \"nossoNumero\": 30050000002,\r\n  \"restartEntrada\": \"009039950273972300500000020003\",\r\n  \"cnpjCpf\": 32118544,\r\n  \"contaProduto\": 39950273972\r\n}\r\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://openapisandbox.prebanco.com.br/boleto/cobranca-consulta-split/v1/executar",
+									"protocol": "https",
+									"host": [
+										"openapisandbox",
+										"prebanco",
+										"com",
+										"br"
+									],
+									"path": [
+										"boleto",
+										"cobranca-consulta-split",
+										"v1",
+										"executar"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Cobrança - Consulta Split Payment - Erro",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{access_token_sandbox}}",
+										"type": "text"
+									},
+									{
+										"key": "",
+										"value": "",
+										"type": "text",
+										"disabled": true
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"nvrsaoLyout\": 1, \r\n    \"cnpjCpf\": 32118544,\r\n    \"cflialCnpj\": 0,\r\n    \"cctrlCnpjCpf\": 79,\r\n    \"idProduto\": 9,\r\n    \"contaProduto\": 39950273972,\r\n    \"nossoNumero\": 0,\r\n    \"nseqTitulo\": 0, \r\n    \"restartEntrada\": \"0090399502739723005000000200030\" \r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://openapisandbox.prebanco.com.br/boleto/cobranca-consulta-split/v1/executar",
+									"protocol": "https",
+									"host": [
+										"openapisandbox",
+										"prebanco",
+										"com",
+										"br"
+									],
+									"path": [
+										"boleto",
+										"cobranca-consulta-split",
+										"v1",
+										"executar"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "PRODUÇÃO",
+			"item": [
+				{
+					"name": "Token",
+					"item": [
+						{
+							"name": "Token",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var jsonData = JSON.parse(responseBody); \r",
+											"postman.setGlobalVariable(\"access_token\", jsonData.access_token);"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "grant_type",
+											"value": "client_credentials",
+											"type": "text"
+										},
+										{
+											"key": "client_id",
+											"value": "{{ClientID_PRD}}",
+											"type": "text"
+										},
+										{
+											"key": "client_secret",
+											"value": "{{ClientSecret_PRD}}",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "https://openapi.bradesco.com.br/auth/server-mtls/v2/token",
+									"protocol": "https",
+									"host": [
+										"openapi",
+										"bradesco",
+										"com",
+										"br"
+									],
+									"path": [
+										"auth",
+										"server-mtls",
+										"v2",
+										"token"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Cobrança - Registro de boleto",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{access_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"codigoUsuarioSolicitante\": \"APISERV\",\r\n    \"nuCPFCNPJ\": 99381908,\r\n    \"filialCPFCNPJ\": 1,\r\n    \"ctrlCPFCNPJ\": 71,\r\n    \"idProduto\": 9,\r\n    \"nuNegociacao\": 999900000000099999,\r\n    \"nuCliente\": \"API1\",\r\n    \"dtEmissaoTitulo\": \"01.01.2025\",\r\n    \"dtVencimentoTitulo\": \"31.12.2024\",\r\n    \"vlNominalTitulo\": 0,\r\n    \"cdEspecieTitulo\": 1,\r\n    \"nomePagador\": \"JOAO CAMPOS\",\r\n    \"logradouroPagador\": \"AVENIDA PAULISTA\",\r\n    \"nuLogradouroPagador\": \"237\",\r\n    \"bairroPagador\": \"BELA VISTA\",\r\n    \"municipioPagador\": \"SAO PAULO\",\r\n    \"ufPagador\": \"SP\",\r\n    \"cdIndCpfcnpjPagador\": 1,\r\n    \"nuCpfcnpjPagador\": 11438390807\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://openapi.bradesco.com.br/boleto/cobranca-registro/v1/cobranca",
+							"protocol": "https",
+							"host": [
+								"openapi",
+								"bradesco",
+								"com",
+								"br"
+							],
+							"path": [
+								"boleto",
+								"cobranca-registro",
+								"v1",
+								"cobranca"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Cobrança - Alteração de boleto",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{access_token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"cpfCnpj\": {\r\n        \"cpfCnpj\": 1234567,\r\n        \"filial\": 1,\r\n        \"controle\": 99\r\n    },\r\n    \"produto\": 9,\r\n    \"negociacao\": 28560222654,\r\n    \"nossoNumero\": 43310000045,\r\n    \"dadosPagador\": {\r\n        \"sacado\": \"\",\r\n        \"cpfCnpjSacado\": {\r\n            \"cpfCnpj\": 0,\r\n            \"filial\": 0,\r\n            \"controle\": 0\r\n        },\r\n        \"endereco\": \"\",\r\n        \"cep\": 0,\r\n        \"sufixo\": 0,\r\n        \"nomeSacador\": \"\",\r\n        \"aceite\": \"\",\r\n        \"cpfCnpjSacador\": {\r\n            \"cpfCnpj\": 0,\r\n            \"filial\": 0,\r\n            \"controle\": 0\r\n        },\r\n        \"emailSacado\": \"\"\r\n    },\r\n    \"dadosTitulo\": {\r\n        \"seuNumero\": \"\",\r\n        \"dataEmissao\": 0,\r\n        \"especie\": \"\",\r\n        \"vencimento\": {\r\n            \"dataVencimento\": 0,\r\n            \"tipoVencimento\": 0\r\n        },\r\n        \"protesto\": {\r\n            \"codInstrucaoProtesto\": 0,\r\n            \"qtdeDiasProtesto\": 0\r\n        },\r\n        \"decurso\": {\r\n            \"codDecursoPrazo\": 0,\r\n            \"diasDecursoPrazo\": 0\r\n        },\r\n        \"abatimento\": {\r\n            \"tipoAbatimento\": 0,\r\n            \"valorAbatimento\": 0\r\n        },\r\n        \"dataDesc1\": 0,\r\n        \"valDesc1\": 0,\r\n        \"codValDe1\": 0,\r\n        \"tipoDesc1\": 0,\r\n        \"dataDesc2\": 0,\r\n        \"valDesc2\": 0,\r\n        \"codValDe2\": 0,\r\n        \"tipoDesc2\": 0,\r\n        \"dataDesc3\": 0,\r\n        \"valDesc3\": 0,\r\n        \"codValDe3\": 0,\r\n        \"tipoDesc3\": 0,\r\n        \"codigoControleParticipante\": \"\",\r\n        \"indicadorAvisoSacado\": \"\",\r\n        \"comissaoPermanencia\": {\r\n            \"diasComissaoPermanencia\": 0,\r\n            \"valorComissaoPermanencia\": 0,\r\n            \"codigoComissaoPermanencia\": 0\r\n        },\r\n        \"codigoMulta\": 0,\r\n        \"diasMulta\": 0,\r\n        \"valorMulta\": 0.00,\r\n        \"codigoNegativacao\": 0,\r\n        \"diasNegativacao\": 0,\r\n        \"pagamentoParcial\": \"\",\r\n        \"qtdePagamentoParcial\": 0\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://openapi.bradesco.com.br/boleto/cobranca-altera/v1/alterar",
+							"protocol": "https",
+							"host": [
+								"openapi",
+								"bradesco",
+								"com",
+								"br"
+							],
+							"path": [
+								"boleto",
+								"cobranca-altera",
+								"v1",
+								"alterar"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Cobrança - Cadastro de Webhook",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{access_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n      \"documento\": {\r\n        \"cpfCnpj\":\"1234567\",\r\n        \"filial\":\"1\",\r\n        \"controle\":\"99\"\r\n      }\r\n    ,\r\n      \"versaoLayout\":\"1\",\r\n      \"tipoCadastro\":\"C\",\r\n      \"utilizaWebhook\":\"S\",\r\n      \"urlEnvio\":\"http://empresa.com.br\",\r\n      \"tipoAviso\":\"1\"\r\n    }\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://openapi.bradesco.com.br/boleto/cobranca-webhook/v1/executar",
+							"protocol": "https",
+							"host": [
+								"openapi",
+								"bradesco",
+								"com",
+								"br"
+							],
+							"path": [
+								"boleto",
+								"cobranca-webhook",
+								"v1",
+								"executar"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Cobrança - Listar boletos liquidados",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{access_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"cpfCnpj\": {\r\n        \"cpfCnpj\": 114383908,\r\n        \"filial\": 0,\r\n        \"controle\": 7\r\n    },\r\n    \"produto\": 0,\r\n    \"negociacao\": 28560230114,\r\n    \"dataMovimentoDe\": 0,\r\n    \"dataMovimentoAte\": 0,\r\n    \"dataPagamentoDe\": 0,\r\n    \"dataPagamentoAte\": 0,\r\n    \"origemPagamento\": 0,\r\n    \"valorTituloDe\": 95,\r\n    \"valorTituloAte\": 100,\r\n    \"paginaAnterior\": 0\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://openapi.bradesco.com.br/boleto/cobranca-lista/v1/listar",
+							"protocol": "https",
+							"host": [
+								"openapi",
+								"bradesco",
+								"com",
+								"br"
+							],
+							"path": [
+								"boleto",
+								"cobranca-lista",
+								"v1",
+								"listar"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Cobrança - Consulta de boleto especifico e emissão de 2ª via",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{access_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"cpfCnpj\": {\r\n        \"cpfCnpj\": 31759488,\r\n        \"filial\": 0,\r\n        \"controle\": 55\r\n    },\r\n    \"produto\": 9,\r\n    \"negociacao\": 2856022652,\r\n    \"nossoNumero\": 50130000040,\r\n    \"sequencia\": 0,\r\n    \"status\": 0\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://openapi.bradesco.com.br/boleto/cobranca-consulta/v1/consultar",
+							"protocol": "https",
+							"host": [
+								"openapi",
+								"bradesco",
+								"com",
+								"br"
+							],
+							"path": [
+								"boleto",
+								"cobranca-consulta",
+								"v1",
+								"consultar"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Cobrança - Solicitação de baixa de boleto",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{access_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"cpfCnpj\": {\r\n        \"cpfCnpj\": \"1234567\",\r\n        \"filial\": \"1\",\r\n        \"controle\": \"99\"\r\n    },\r\n    \"produto\": 9,\r\n    \"negociacao\": 28560222654,\r\n    \"nossoNumero\": \"50150001462\",\r\n    \"sequencia\": 0,\r\n    \"codigoBaixa\": 57\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://openapi.bradesco.com.br/boleto/cobranca-baixa/v1/baixar",
+							"protocol": "https",
+							"host": [
+								"openapi",
+								"bradesco",
+								"com",
+								"br"
+							],
+							"path": [
+								"boleto",
+								"cobranca-baixa",
+								"v1",
+								"baixar"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Cobrança - Lista de Títulos Baixados",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{access_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n   \"versao\": 1,\r\n   \"cpfCnpj\": {\r\n       \"cpfCnpj\": 114383908,\r\n       \"filial\": 0,\r\n       \"controle\": 7\r\n   },\r\n   \"produto\": 9,\r\n   \"negociacao\": 28560222652,\r\n   \"dataVencimentoDe\": 20200106,\r\n   \"dataVencimentoAte\": 20250206,\r\n   \"valorTituloInicio\": 0,\r\n   \"codigoBaixa\": 0,\r\n   \"paginaAnterior\": 0\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://openapi.bradesco.com.br/boleto/cobranca-baixado-consulta/v1/listar",
+							"protocol": "https",
+							"host": [
+								"openapi",
+								"bradesco",
+								"com",
+								"br"
+							],
+							"path": [
+								"boleto",
+								"cobranca-baixado-consulta",
+								"v1",
+								"listar"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Cobrança - Consulta lista de boletos pendentes de liquidação",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{access_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"cpfCnpj\": {\r\n        \"cpfCnpj\": 114383908,\r\n        \"filial\": 0,\r\n        \"controle\": 7\r\n    },\r\n    \"produto\": 1,\r\n    \"negociacao\": 28560230114,\r\n    \"nossoNumero\": 0,\r\n    \"cpfCnpjPagador\": {\r\n        \"cpfCnpj\": 0,\r\n        \"filial\": 0,\r\n        \"controle\": 0\r\n    },\r\n    \"dataVencimentoDe\": 0,\r\n    \"dataVencimentoAte\": 0,\r\n    \"dataRegistroDe\": 0,\r\n    \"dataRegistroAte\": 0,\r\n    \"valorTituloDe\": 0,\r\n    \"faixaVencto\": 7,\r\n    \"paginaAnterior\": 0\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://openapi.bradesco.com.br/boleto/cobranca-pendente/v1/listar",
+							"protocol": "https",
+							"host": [
+								"openapi",
+								"bradesco",
+								"com",
+								"br"
+							],
+							"path": [
+								"boleto",
+								"cobranca-pendente",
+								"v1",
+								"listar"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Cobrança - Protesto e Negativação de Boletos",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{access_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"codigoProduto\": \"11\",\r\n  \"nossoNumero\": \"43123456757\",\r\n  \"codigoFuncao\": \"\",\r\n  \"parmFuncao\": \"\",\r\n  \"cpfCnpj\": {\r\n    \"filial\": \"0001\",\r\n    \"cpfCnpj\": \"999999999\",\r\n    \"controle\": \"99\"\r\n  },\r\n  \"contaProduto\": \"40970743138\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://openapi.bradesco.com.br/boleto/cobranca-protesto-negativacao/v1/executar",
+							"protocol": "https",
+							"host": [
+								"openapi",
+								"bradesco",
+								"com",
+								"br"
+							],
+							"path": [
+								"boleto",
+								"cobranca-protesto-negativacao",
+								"v1",
+								"executar"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Cobrança - Manutenção Split Payment",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{access_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"cflialCnpj\": \"0\",\r\n  \"listaRteio\": [\r\n    {\r\n      \"floatRteioBnefc\": 0,\r\n      \"cctaBnefcRteio\": 604,\r\n      \"acaoRteio\": \"I\",\r\n      \"vlrPercRteio\": \"1000\",\r\n      \"ibnefcRteioCredt\": \"BANCO RENDIMENTO S/A\",\r\n      \"cagBnefcRteio\": 4150,\r\n      \"pcelaRteioCredt\": \"\"\r\n    }\r\n  ],\r\n  \"nseqTitulo\": 0,\r\n  \"cctrlCnpjCpf\": \"10\",\r\n  \"idProduto\": \"9\",\r\n  \"ctpoVlrRteio\": 1,\r\n  \"canclRteio\": \"N\",\r\n  \"nvrsaoLyout\": 1,\r\n  \"nossoNumero\": \"30200000002\",\r\n  \"ccalcRteio\": 1,\r\n  \"cnpjCpf\": \"249049448\",\r\n  \"contaProduto\": \"20001458\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://openapi.bradesco.com.br/boleto/cobranca-manutencao-split/v1/manutencao-rateio-credito",
+							"protocol": "https",
+							"host": [
+								"openapi",
+								"bradesco",
+								"com",
+								"br"
+							],
+							"path": [
+								"boleto",
+								"cobranca-manutencao-split",
+								"v1",
+								"manutencao-rateio-credito"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Cobrança - Consulta Split Payment",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{access_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"cflialCnpj\": 0,\r\n  \"nseqTitulo\": 0,\r\n  \"cctrlCnpjCpf\": 79,\r\n  \"idProduto\": 9,\r\n  \"nvrsaoLyout\": 1,\r\n  \"nossoNumero\": 30050000002,\r\n  \"restartEntrada\": \"009039950273972300500000020003\",\r\n  \"cnpjCpf\": 32118544,\r\n  \"contaProduto\": 39950273972\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://openapi.bradesco.com.br/boleto/cobranca-consulta-split/v1/executar",
+							"protocol": "https",
+							"host": [
+								"openapi",
+								"bradesco",
+								"com",
+								"br"
+							],
+							"path": [
+								"boleto",
+								"cobranca-consulta-split",
+								"v1",
+								"executar"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

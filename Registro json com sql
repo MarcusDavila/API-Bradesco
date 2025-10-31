@@ -1,0 +1,119 @@
+SELECT
+    json_build_object(
+        
+
+        'debitoAutomatico', 'N',
+
+        --- >>> DESTAQUE: DADOS DE CONTROLE E AUTENTICAÇÃO (PREENCHER) <<< ---
+        'codigoUsuarioSolicitante', '<SEU_USUARIO_API>', -- não tem no manuao com o layout de entrada, retirado somente do "collections API " do bradesco
+        'nuCPFCNPJ', 94492899, 
+        'filialCPFCNPJ', 1, 
+        'ctrlCPFCNPJ', 50, 
+        'registraTitulo', 1, 
+
+        -- Dados do Título
+        'idProduto', CAST(fatura.modalidadecobranca AS INTEGER),
+        'nuNegociacao', (SUBSTRING(fatura.agencia, 1, 4) || '0000000' || SUBSTRING(REPLACE(f.conta, '-', ''), 1, 7))::BIGINT,
+        'nuTitulo', SUBSTRING(fatura.nossonumero, 1, 11)::BIGINT,
+        'nuCliente', fatura.sequencia::TEXT,
+        'dtEmissaoTitulo', to_char(fatura.dtemissao, 'DD.MM.YYYY'),
+        'dtVencimentoTitulo', to_char(fatura.dtvencimento, 'DD.MM.YYYY'),
+        'tpVencimento', 0,
+        'indicadorMoeda', 0, -- 0 = Real.
+        'vlNominalTitulo', fatura.valortitulo,
+        'qmoedaNegocTitlo', 0,
+        'cdEspecieTitulo', 2, -- 2 = Duplicata Mercantil. Verifique o código correto.
+        'cindcdAceitSacdo', '2', -- '2' = Não Aceite.
+
+        -- Dados de Protesto e Negativação
+        'tpProtestoAutomaticoNegativacao', NULL, -- Preencher com 1 (dias corridos) ou 2 (dias úteis) se for usar.
+        'prazoProtestoAutomaticoNegativacao', NULL, -- Preencher com o número de dias se o campo acima for usado.
+        'tipoDiasDecursoProt', 0,
+        'tipoDecursoPrazo', 0,
+
+        -- Outros Controles
+        'controleParticipante', '',
+        'cdPagamentoParcial', 'N',
+        'qtdePagamentoParcial', NULL,
+        'tipoPrazoDecursoTres', 0,
+
+        -- Juros
+        'percentualJuros', fatura.percentualjuros,
+        'vlJuros', 0.00,
+        'qtdeDiasJuros', 1,
+
+        -- Multa
+        'percentualMulta', fatura.percentualmulta,
+        'vlMulta', 0.00,
+        'qtdeDiasMulta', 1,
+
+        -- Descontos
+        'percentualDesconto1', 0.00,
+        'vlDesconto1', 0.00,
+        'dataLimiteDesconto1', '',
+        'percentualDesconto2', 0.00,
+        'vlDesconto2', 0.00,
+        'dataLimiteDesconto2', '',
+        'percentualDesconto3', 0.00,
+        'vlDesconto3', 0.00,
+        'dataLimiteDesconto3', '',
+
+        -- Bonificação
+        'prazoBonificacao', 0,
+        'percentualBonificacao', 0.00,
+        'vlBonificacao', 0.00,
+        'dtLimiteBonificacao', '',
+
+        -- Abatimento e IOF
+        'vlAbatimento', 0.00,
+        'vlIOF', 0.00,
+
+        --- >>> DESTAQUE: DADOS DO PAGADOR (SACADO) <<< ---
+        'nomePagador', cadastro.razaosocial,
+        'logradouroPagador', fatura.endereco,
+        'nuLogradouroPagador', fatura.endereconumero::TEXT,
+        'complementoLogradouroPagador', fatura.complemento,
+        'cepPagador', CAST(SUBSTRING(fatura.cep::TEXT, 1, 5) AS INTEGER),
+        'complementoCepPagador', CAST(SUBSTRING(fatura.cep::TEXT, 6, 3) AS INTEGER),
+        'bairroPagador', fatura.bairro,
+        'municipioPagador', fatura.cidade,
+        'ufPagador', fatura.uf,
+        'cdIndCpfcnpjPagador', CASE WHEN LENGTH(fatura.cliente) = 14 THEN 2 ELSE 1 END,
+        'nuCpfcnpjPagador', fatura.cliente::BIGINT,
+        'endEletronicoPagador', '', -- Preencher se tiver o e-mail do cliente.
+
+        -- Dados de Débito Automático (opcional)
+        'bancoDoDebAutomatico', NULL,
+        'agenciaDoDebAutomatico', NULL,
+        'digitoAgenciaDoDebAutomat', NULL,
+        'contaDoDebAutomatico', NULL,
+        'razaoDoDebAutomatico', NULL,
+
+        -- Dados de Sacador/Avalista (opcional)
+        'nomeSacadorAvalista', NULL,
+        'logradouroSacadorAvalista', NULL,
+        'nuLogradouroSacadorAvalista', NULL,
+        'complementoLogradouroSacadorAvalista', NULL,
+        'cepSacadorAvalista', NULL,
+        'complementoCepSacadorAvalista', NULL,
+        'bairroSacadorAvalista', NULL,
+        'municipioSacadorAvalista', NULL,
+        'ufSacadorAvalista', NULL,
+        'cdIndCpfcnpjSacadorAvalista', NULL,
+        'nuCpfcnpjSacadorAvalista', NULL,
+        'enderecoSacadorAvalista', NULL,
+
+        -- Mensagens (convertendo o campo 'observacao' em uma lista JSON)
+        'listaMsgs', CASE
+            WHEN fatura.observacao IS NOT NULL AND fatura.observacao <> ''
+            THEN json_build_array(json_build_object('mensagem', fatura.observacao))
+            ELSE '[]'::json
+        END
+    ) AS json_para_api
+FROM
+    fatura
+LEFT OUTER JOIN cadastro ON cadastro.codigo = fatura.cliente 
+WHERE
+    fatura.sequencia = 332765; -- Altere aqui a sequência da fatura para teste
+
+    
