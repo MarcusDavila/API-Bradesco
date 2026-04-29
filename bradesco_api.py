@@ -38,7 +38,7 @@ def solicitar_novo_token():
         print("Erro: Arquivo de certificado ou chave não encontrado.")
         return None
 
-    url = "https://openapi.bradesco.com.br/auth/server-mtls/v2/token"
+    url = "https://openapisandbox.prebanco.com.br/boleto/cobranca-registro/v1/cobranca"
     payload = f'grant_type=client_credentials&client_id={config.BRADESCO_CLIENT_ID}'
     headers = {'Content-Type': 'application/x-www-form-urlencoded'}
     
@@ -49,7 +49,7 @@ def solicitar_novo_token():
             key_file=config.BRADESCO_KEY_FILE, 
             password=config.BRADESCO_CERT_PASSWORD
         )
-        session.mount('https://openapi.bradesco.com.br', adapter)
+        session.mount('https://openapisandbox.prebanco.com.br', adapter)
 
         print("Realizando a chamada para a API do Bradesco para obter um novo token...")
         response = session.post(url, headers=headers, data=payload)

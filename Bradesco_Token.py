@@ -2,12 +2,7 @@ import database
 import bradesco_api
 
 def obter_token_acesso():
-    """
-    Orquestra a obtenção do token.
-    Primeiro, tenta buscar um token válido no banco de dados.
-    Se não encontrar, solicita um novo à API e o salva no banco.
-    Retorna o access_token em caso de sucesso ou None em caso de falha.
-    """
+  
     # 1. Tenta buscar um token válido no banco de dados
     print("Verificando se há um token válido no banco de dados...")
     access_token = database.buscar_token_valido_bd()

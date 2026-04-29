@@ -27,7 +27,7 @@ def buscar_token_valido_bd():
         with conn.cursor() as cur:
             cur.execute("""
                 SELECT access_token, dtemissao, expires_in
-                FROM pub_token_bradesco
+                FROM pub_tokens_bradesco
                 WHERE dtemissao + INTERVAL '1 second' * (expires_in - 60) > NOW()
                 ORDER BY dtemissao DESC
                 LIMIT 1;
@@ -41,7 +41,7 @@ def buscar_token_valido_bd():
     finally:
         if conn:
             conn.close()
-    
+
     print("Nenhum token válido encontrado no banco de dados.")
     return None
 
@@ -56,7 +56,7 @@ def salvar_token_bd(token_info):
         
         with conn.cursor() as cur:
             cur.execute("""
-                INSERT INTO pub_token_bradesco (access_token, token_type, dtemissao, expires_in, scope)
+                INSERT INTO pub_tokens_bradesco (access_token, token_type, dtemissao, expires_in, scope)
                 VALUES (%s, %s, %s, %s, %s);
             """, (
                 token_info['access_token'],
@@ -65,6 +65,7 @@ def salvar_token_bd(token_info):
                 expires_in_int,
                 token_info['scope']
             ))
+
         conn.commit()
         print("Novo token salvo no banco de dados com sucesso.")
     except (psycopg2.Error, KeyError, ValueError) as e:
